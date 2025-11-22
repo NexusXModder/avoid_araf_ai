@@ -8,6 +8,12 @@
     --text-color: #343A40; /* Dark Gray for main text */
     --success-color: #28A745; /* Green for success messages */
     --error-color: #DC3545; /* Red for errors/notes */
+    /* NEW: Dark/Black Theme Variables */
+    --dark-bg: #000000;
+    --dark-text: #FFFFFF;
+    --dark-input-bg: #333333;
+    --dark-btn-bg: #4A4A4A;
+    --dark-btn-hover: #5A5A5A;
 }
 
 /* --- Base Styles --- */
@@ -22,7 +28,9 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
     line-height: 1.6;
-    padding: 20px;
+    /* Removed padding: 20px; to allow dark screen to take full viewport */
+    padding: 0; 
+    min-height: 100vh;
 }
 
 a {
@@ -35,6 +43,11 @@ a:hover {
     color: var(--secondary-color);
 }
 
+/* --- Utilities --- */
+.hidden {
+    display: none !important;
+}
+
 /* --- Container (Used for Admin Page) --- */
 .container {
     max-width: 600px;
@@ -45,8 +58,13 @@ a:hover {
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
     border-top: 5px solid var(--secondary-color);
 }
+.admin-panel-container {
+    /* Ensure admin panel fits standard screen if index.html is full dark */
+    min-height: auto; 
+}
 
-/* --- Headings --- */
+
+/* --- Headings (Global) --- */
 h1 {
     color: var(--primary-color);
     text-align: center;
@@ -62,7 +80,7 @@ h2 {
     font-weight: 500;
 }
 
-/* --- Inputs and Buttons --- */
+/* --- Inputs and Buttons (Global) --- */
 input[type="text"],
 input[type="password"],
 textarea {
@@ -127,11 +145,107 @@ button:hover {
     border-color: #F5C6CB;
 }
 
-.hidden {
-    display: none !important;
+
+/* ===================================================================
+NEW LANDING UI STYLES (index.html - replication of the black screen)
+=================================================================== 
+*/
+
+.landing-container {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
 }
 
-/* --- CHAT-SPECIFIC STYLES (for index.html) --- */
+.landing-header {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px;
+    text-align: center;
+}
+
+/* ServerLogin Button Style */
+.server-login-btn {
+    background-color: #3b3b4d; /* Dark purple/gray background */
+    color: var(--dark-text);
+    padding: 8px 15px;
+    border-radius: 25px;
+    font-size: 0.9em;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    transition: background-color 0.2s;
+}
+.server-login-btn:hover {
+    background-color: #4a4a60;
+}
+.server-login-btn .diamond {
+    margin-right: 5px;
+    color: var(--secondary-color); /* Light blue diamond */
+    font-size: 1.1em;
+}
+
+/* Admin Panel Back Button (reuses Server Login style) */
+.back-btn {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+}
+
+.landing-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top: -100px; /* Adjust central position */
+}
+
+.landing-title {
+    color: var(--dark-text);
+    font-size: 1.8em;
+    font-weight: 400;
+    margin-bottom: 0px;
+}
+
+.landing-subtitle {
+    color: #aaaaaa; /* Lighter gray for subtitle */
+    font-size: 0.9em;
+    font-family: monospace; /* Mimic the font from the image */
+}
+
+.landing-footer {
+    width: 100%;
+    max-width: 400px;
+    padding: 0 10px 40px; 
+}
+
+/* Ask A21-GPT Button Style */
+.ask-gpt-btn {
+    width: 100%;
+    background-color: var(--dark-input-bg); /* Darker gray background */
+    color: var(--dark-text);
+    border-radius: 12px;
+    padding: 15px 25px;
+    font-size: 1.1em;
+    font-weight: 500;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+.ask-gpt-btn:hover {
+    background-color: var(--dark-btn-hover);
+}
+
+
+/* ===================================================================
+EXISTING CHAT-SPECIFIC STYLES (for index.html when chat is visible)
+=================================================================== 
+*/
 
 .chat-container {
     max-width: 800px;
@@ -161,18 +275,22 @@ button:hover {
     color: white;
     margin: 0;
     text-align: left;
+    font-size: 1.5em; /* Reduced size slightly for better fit with the button */
 }
 
-.admin-link-chat {
-    color: white !important;
-    text-decoration: underline !important;
-    font-size: 0.9em;
-    opacity: 0.8;
+/* Styling for the Back button in the chat header */
+.back-to-landing {
+    background-color: #3b3b4d;
+    color: white;
+    padding: 5px 10px;
+    font-size: 0.8em;
+    border-radius: 15px;
+    font-weight: normal;
+}
+.back-to-landing:hover {
+    background-color: #4a4a60;
 }
 
-.admin-link-chat:hover {
-    opacity: 1;
-}
 
 /* Chat History Area */
 .chat-history {
@@ -278,4 +396,3 @@ button:hover {
     font-size: 1.2em;
     animation: dot-flash 1s infinite step-start;
 }
-

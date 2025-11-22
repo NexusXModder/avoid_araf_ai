@@ -7,9 +7,17 @@
     <link rel="stylesheet" href="style.css"> 
 </head>
 <body>
-    <div class="container">
-        <h1>🔐 Admin Server Login</h1>
-        <p style="text-align: center; color: #6c757d; margin-bottom: 30px;">This panel is for adding new knowledge to the AI's database.</p>
+    <div class="container admin-panel-container"> 
+        <header class="chat-header">
+            <button class="server-login-btn back-btn" onclick="goToChat()"> 
+                <span class="diamond">&larr;</span> Back to Chat
+            </button>
+            <h1>🔐 Admin Server Login</h1>
+        </header>
+        
+        <p style="text-align: center; color: #6c757d; margin-bottom: 30px;">
+            This panel is for adding new knowledge to the AI's database.
+        </p>
         
         <div id="login-section" class="login-section">
             <h2>Unlock Panel</h2>
@@ -33,24 +41,33 @@
 
         <div id="message-box"></div>
 
-        <div class="admin-link" style="text-align: center; margin-top: 35px;">
-            <a href="/">← Go back to AI Chat</a>
-        </div>
     </div>
 
     <script>
-        const ADMIN_PASS = "arafmahbub@16"; // Retrieved from .env, hardcoded here for frontend demo
+        // Security Note: The hardcoded ADMIN_PASS has been removed. 
+        // We now rely entirely on the server (server.py) to authenticate the password 
+        // using the secure environment variable from your .env file.
 
         function showMessage(message, isError = false) {
             const messageBox = document.getElementById('message-box');
             messageBox.innerText = message;
             messageBox.className = isError ? 'error' : 'success';
         }
+        
+        function goToChat() {
+            // This button takes the user back to the main landing page (index.html)
+            window.location.href = "/"; 
+        }
 
         async function adminLogin() {
             const password = document.getElementById('admin-password').value;
             const messageBox = document.getElementById('message-box');
             
+            if (!password) {
+                showMessage("Please enter the password.", true);
+                return;
+            }
+
             messageBox.innerText = "Verifying...";
             messageBox.className = 'success';
 
@@ -68,6 +85,8 @@
                     document.getElementById('login-section').classList.add('hidden');
                     document.getElementById('learning-section').classList.remove('hidden');
                 } else {
+                    // Clear password field on failure for security
+                    document.getElementById('admin-password').value = '';
                     showMessage(data.message, true);
                 }
             } catch (error) {
@@ -76,13 +95,13 @@
         }
 
         async function learnContent(type) {
+            // We retrieve the password entered during login for subsequent requests.
+            const passwordInput = document.getElementById('admin-password');
+            const enteredPassword = passwordInput.value; 
             const messageBox = document.getElementById('message-box');
             
-            // Check for unauthorized access by checking the password again (security layer)
-            const passwordInput = document.getElementById('admin-password');
-            const enteredPassword = passwordInput ? passwordInput.value : ADMIN_PASS;
-            if (enteredPassword !== ADMIN_PASS) {
-                showMessage("Authentication required to teach.", true);
+            if (!enteredPassword) {
+                showMessage("Authentication state lost. Please log in again.", true);
                 return;
             }
 
@@ -90,6 +109,7 @@
             messageBox.className = 'success'; 
 
             const formData = new FormData();
+            // Send the password again to authenticate the 'learn' endpoint securely on the server
             formData.append('admin_pass', enteredPassword); 
 
             if (type === 'text') {
@@ -100,7 +120,7 @@
                 }
                 formData.append('text_input', textInput);
             } else if (type === 'image') {
-                // Image functionality is disabled as per server.py/original code
+                // Image functionality remains disabled as in your original file
                 showMessage("Image learning is temporarily disabled by the system.", true);
                 return;
             }

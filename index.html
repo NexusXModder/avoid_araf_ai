@@ -3,18 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI HSC Math & Physics Tutor - Chat</title>
+    <title>AI HSC Math & Physics Tutor</title>
     <link rel="stylesheet" href="style.css"> 
 </head>
 <body>
-    <div class="chat-container">
+    
+    <div class="landing-container" id="landing-screen">
+        <header class="landing-header">
+            <button class="server-login-btn" onclick="goToAdminPanel()">
+                <span class="diamond">&diams;</span> ServerLogin
+            </button>
+        </header>
+
+        <div class="landing-content">
+            <h2 class="landing-title">What can I help with?</h2>
+            <p class="landing-subtitle">Made by @avoid_araf_</p>
+        </div>
+
+        <div class="landing-footer">
+            <button class="ask-gpt-btn" onclick="showChatScreen()">
+                Ask A21-GPT
+            </button>
+        </div>
+    </div>
+
+
+    <div class="chat-container hidden" id="chat-screen">
         <header class="chat-header">
             <h1>🎓 Ai HSC Helper by @avoid_araf_</h1>
-            <a href="/admin" class="admin-link-chat">Admin Panel</a>
+            <button class="back-to-landing" onclick="showLandingScreen()">&larr; Back</button>
         </header>
 
         <div id="chat-history" class="chat-history">
-            <div class="message ai-message">
+            <div class="message ai-message initial-message">
                 <p>Hello! I am your AI HSC Math & Physics Tutor. Ask me any question, and I will provide a detailed solution in Bengali. How can I help you today?</p>
                 <span class="timestamp">Just now</span>
             </div>
@@ -27,9 +48,29 @@
     </div>
 
     <script>
+        const landingScreen = document.getElementById('landing-screen');
+        const chatScreen = document.getElementById('chat-screen');
         const chatHistory = document.getElementById('chat-history');
         const questionInput = document.getElementById('question-input');
         const sendButton = document.querySelector('.chat-input-area button');
+
+        // --- SCREEN MANAGEMENT FUNCTIONS ---
+        function showChatScreen() {
+            landingScreen.classList.add('hidden');
+            chatScreen.classList.remove('hidden');
+            questionInput.focus();
+        }
+
+        function showLandingScreen() {
+            landingScreen.classList.remove('hidden');
+            chatScreen.classList.add('hidden');
+        }
+        
+        function goToAdminPanel() {
+            window.location.href = "/admin"; // Redirects to the existing admin panel
+        }
+
+        // --- CHAT LOGIC FUNCTIONS (Unchanged from your original file) ---
 
         // Function to create and append a message bubble
         function appendMessage(text, isUser) {

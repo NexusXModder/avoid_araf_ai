@@ -7,13 +7,15 @@ import base64
 
 load_dotenv()
 
+# Set the template folder to the current directory for easy access to HTML files
 app = Flask(__name__, template_folder='.') 
 
 # Configuration
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
 
-# Client Initialisation (Fixed)
+# Client Initialisation
 try:
+    # Initialize the client using the environment variable
     client = gemini.Client(api_key=os.getenv("GEMINI_API_KEY"))
 except Exception as e:
     # This prevents the server from crashing if API key is missing during deployment
@@ -30,6 +32,8 @@ def admin_login():
     """Handles admin login for accessing the learning panel."""
     data = request.json
     password = data.get('password')
+    
+    # Check against the secure server-side environment variable
     if password == ADMIN_PASSWORD:
         return jsonify({"success": True, "message": "Login successful!"})
     return jsonify({"success": False, "message": "Incorrect password."}), 401
@@ -37,6 +41,7 @@ def admin_login():
 @app.route('/learn', methods=['POST'])
 def learn_content():
     """Endpoint for the admin to upload text or images to teach the AI."""
+    # Authenticate using the password sent from the admin panel
     if request.form.get('admin_pass') != ADMIN_PASSWORD:
         return jsonify({"error": "Unauthorized Access"}), 401
     
@@ -46,16 +51,13 @@ def learn_content():
     text_input = request.form.get('text_input')
     uploaded_file = request.files.get('file')
 
-    # ... (Rest of the learning logic)
-    # The image learning block is complex and often causes deployment issues; 
-    # for stability in the RAG demo, we will simplify the learning process to text only.
-    # To stabilize the deployment process, we prioritize the text learning part.
-    
     global knowledge_base
 
+    # Check for image content (currently disabled for stability)
     if uploaded_file:
         return jsonify({"error": "Image learning functionality is disabled for stability during deployment fix."}), 501
     
+    # Process text content
     if text_input:
         knowledge_base.append(f"Learned from text: {text_input}")
         return jsonify({"success": True, "message": "Learned from text successfully."})
@@ -89,23 +91,26 @@ def ask_ai():
     )
 
     try:
-        # FIX: The client.models.generate_content() accepts the prompt directly as a keyword argument (contents=) or the first positional argument.
+        # Call the Gemini API
         response = client.models.generate_content(
-            model='gemini-2.5-flash', # Specify the model explicitly
-            contents=full_prompt # Passed correctly as contents
+            model='gemini-2.5-flash',
+            contents=full_prompt 
         ) 
         return jsonify({"answer": response.text})
     except Exception as e:
+        # Catch any API errors
         return jsonify({"error": f"AI error: {str(e)}"}), 500
 
 # --- Routes for HTML Pages ---
 
 @app.route('/')
 def index():
+    # Renders the main chat/landing page
     return render_template('index.html')
 
 @app.route('/admin')
 def admin():
+    # Renders the admin login/learning page
     return render_template('admin.html')
 
 
