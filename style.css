@@ -28,7 +28,6 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
     line-height: 1.6;
-    /* Removed padding: 20px; to allow dark screen to take full viewport */
     padding: 0; 
     min-height: 100vh;
 }
@@ -44,6 +43,7 @@ a:hover {
 }
 
 /* --- Utilities --- */
+/* CRITICAL FIX: Ensure display: none always works */
 .hidden {
     display: none !important;
 }
@@ -59,7 +59,6 @@ a:hover {
     border-top: 5px solid var(--secondary-color);
 }
 .admin-panel-container {
-    /* Ensure admin panel fits standard screen if index.html is full dark */
     min-height: auto; 
 }
 
