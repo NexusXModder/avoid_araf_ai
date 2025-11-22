@@ -3,38 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Tutor Admin Learning Panel</title>
+    <title>AI Tutor Admin Panel</title>
     <link rel="stylesheet" href="style.css"> 
 </head>
 <body>
     <div class="container">
-        <h1>🔑 Admin Learning Panel</h1>
+        <h1>🔐 Server Login</h1>
         
         <div id="login-section" class="login-section">
-            <p>Enter your Admin Password:</p>
-            <input type="password" id="admin-password" placeholder="Password">
-            <button onclick="adminLogin()">Login</button>
+            <p style="margin-bottom: 10px;">Enter your Admin Password to unlock:</p>
+            <input type="password" id="admin-password" placeholder="Admin Password">
+            <button onclick="adminLogin()">Unlock Panel</button>
         </div>
 
         <div id="learning-section" class="hidden">
-            <p><strong>1. Teach with Text:</strong> (e.g., A crucial formula or definition)</p>
-            <textarea id="text-input" rows="3" placeholder="Enter new Math/Physics content or note"></textarea>
+            <h2 style="margin-bottom: 20px;">Teach the AI New Content (Text Only)</h2>
+            <p style="margin-bottom: 10px;">Provide specific formulas, notes, or solutions from HSC textbooks to expand the AI's knowledge base:</p>
+            <textarea id="text-input" rows="6" placeholder="e.g., According to Newton's Second Law, F = ma. This concept is vital for solving dynamics problems."></textarea>
             <button onclick="learnContent('text')">Teach with Text</button>
-
-            <hr>
-
-            <p><strong>2. Teach with Image/Screenshot:</strong> (Picture of a book page or problem)</p>
-            <input type="file" id="file-input" accept="image/*">
-            <button onclick="learnContent('image')">Teach with Image</button>
             
-            <p style="margin-top: 20px;"><a href="/">Go back to Homepage</a></p>
+            <p style="margin-top: 25px; color: #DC3545; font-weight: bold;">
+                Note: Image learning has been temporarily disabled for stability.
+            </p>
         </div>
 
         <div id="message-box"></div>
+
+        <div class="back-to-home" style="text-align: center; margin-top: 30px;">
+            <a href="/">← Go back to Tutor</a>
+        </div>
     </div>
 
     <script>
-        // NOTE: The real security check is done on the server side (server.py).
         const ADMIN_PASS = "arafmahbub@16"; 
         let isLoggedIn = false;
 
@@ -63,9 +63,9 @@
             }
 
             const messageBox = document.getElementById('message-box');
-            messageBox.innerText = "Teaching AI... (Please wait, especially for images)";
+            messageBox.innerText = "Teaching AI... (Sending data)";
             messageBox.className = 'success'; 
-            
+
             const formData = new FormData();
             formData.append('admin_pass', ADMIN_PASS); 
 
@@ -77,12 +77,9 @@
                 }
                 formData.append('text_input', textInput);
             } else if (type === 'image') {
-                const fileInput = document.getElementById('file-input');
-                if (fileInput.files.length === 0) {
-                    showMessage("Please select a file to upload.", true);
-                    return;
-                }
-                formData.append('file', fileInput.files[0]);
+                // Image functionality is disabled for stability (as per server.py change)
+                showMessage("Image learning is temporarily disabled.", true);
+                return;
             }
 
             try {
@@ -96,7 +93,6 @@
                 if (response.ok) {
                     showMessage(`Success! Server Message: ${data.message}`);
                     if (type === 'text') document.getElementById('text-input').value = ''; 
-                    if (type === 'image') document.getElementById('file-input').value = '';
                 } else {
                     showMessage(`Error: ${data.error || "Unknown problem"}`, true);
                 }

@@ -8,23 +8,24 @@
 </head>
 <body>
     <div class="container">
-        <h1>🎓 AI HSC Math & Physics Tutor by @avoid_araf_</h1>
-        <p>Enter your mathematical or physics question here (Solution will be provided in Bengali):</p>
+        <h1>🎓 Ai HSC Helper <small style="font-size: 0.5em; color: #6c757d;">by @avoid_araf_</small></h1>
+        <p style="text-align: center; margin-bottom: 25px;">Enter your mathematical or physics question here (Solution will be provided in Bengali):</p>
         
-        <textarea id="question-input" rows="5" placeholder="e.g., If a body's velocity changes from 5m/s to 10m/s in 2s, what is the acceleration?"></textarea>
+        <textarea id="question-input" rows="5" placeholder="e.g., A stone is thrown vertically upwards with a velocity of 20 m/s. Calculate the maximum height it reaches."></textarea>
         <button onclick="askAI()">Get Solution</button>
         
-        <hr>
+        <hr style="margin: 30px 0; border-top: 1px solid #eee;">
 
         <h2>Solution:</h2>
-        <div id="response-box">...The solution will appear here...</div>
+        <div id="response-box">...The world-class solution will appear here...</div>
 
-        <div class="admin-link">
+        <div class="admin-link" style="text-align: right; margin-top: 25px;">
             <a href="/admin">Admin Learning Panel</a>
         </div>
     </div>
 
     <script>
+        // JS remains the same, but the UI updates its appearance based on the new CSS
         async function askAI() {
             const question = document.getElementById('question-input').value;
             const responseBox = document.getElementById('response-box');
@@ -34,7 +35,7 @@
                 return;
             }
 
-            responseBox.innerText = "Processing solution... (Please wait)";
+            responseBox.innerHTML = "<h4>Processing solution... <small style='color: #0077B6;'>Please wait</small></h4>";
 
             try {
                 const response = await fetch('/ask', {
@@ -50,7 +51,7 @@
                 if (response.ok) {
                     responseBox.innerText = data.answer;
                 } else {
-                    responseBox.innerText = `Error: ${data.error || "Unknown problem"}`;
+                    responseBox.innerText = `Error: ${data.error || "Unknown problem"}. Please check API Key configuration on Render.`;
                 }
 
             } catch (error) {

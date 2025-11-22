@@ -1,6 +1,15 @@
-/* style.css - Clean and Professional Design for AI Tutor */
+/* style.css - World-Class, Paid, Professional Design for AI Tutor */
 
-/* --- Universal Reset and Base --- */
+:root {
+    --primary-color: #0077B6; /* Deep Blue */
+    --secondary-color: #00B4D8; /* Light Blue/Cyan */
+    --background-color: #F8F9FA; /* Lightest Gray */
+    --card-background: #FFFFFF;
+    --text-color: #343A40;
+    --success-color: #28A745;
+    --error-color: #DC3545;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -8,25 +17,136 @@
 }
 
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f0f2f5; /* Light grey background */
-    color: #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
     line-height: 1.6;
-    padding: 40px 20px;
+    padding: 20px;
 }
 
-/* --- Container Layout --- */
 .container {
     max-width: 900px;
-    margin: 0 auto;
-    background-color: #ffffff;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    margin: 40px auto;
+    background-color: var(--card-background);
+    padding: 45px;
+    border-radius: 16px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    border-top: 5px solid var(--secondary-color);
 }
 
-/* --- Headings and Titles --- */
+/* --- Headings --- */
 h1 {
-    color: #007bff; /* Primary Blue */
+    color: var(--primary-color);
     text-align: center;
-    margin-
+    margin-bottom: 20px;
+    font-size: 2.5em;
+    font-weight: 600;
+}
+
+h2 {
+    color: var(--primary-color);
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-size: 1.8em;
+    border-left: 5px solid var(--secondary-color);
+    padding-left: 10px;
+}
+
+/* --- Inputs & Buttons --- */
+textarea, input[type="password"], input[type="file"], input[type="text"] {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #CED4DA;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: all 0.3s;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+textarea:focus, input:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.2);
+    outline: none;
+}
+textarea { resize: vertical; min-height: 120px; }
+
+button {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 14px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    width: 100%;
+    margin-top: 5px;
+}
+
+button:hover {
+    background-color: var(--secondary-color);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* --- Response Area --- */
+#response-box {
+    margin-top: 25px;
+    padding: 25px;
+    background-color: #EBF8FF; /* Lighter shade of blue */
+    border-radius: 10px;
+    border: 1px solid var(--secondary-color);
+    min-height: 150px;
+    font-size: 1em;
+    white-space: pre-wrap;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* --- Admin Panel Specific Styles --- */
+.login-section button {
+    background-color: var(--secondary-color);
+}
+.login-section button:hover {
+    background-color: #0077B6;
+}
+
+#learning-section button {
+    background-color: var(--success-color);
+}
+#learning-section button:hover {
+    background-color: #1E7E34;
+}
+
+#message-box {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.success {
+    background-color: #D4EDDA;
+    border: 1px solid var(--success-color);
+    color: #155724;
+}
+
+.error {
+    background-color: #F8D7DA;
+    border: 1px solid var(--error-color);
+    color: #721C24;
+}
+
+.hidden { display: none !important; }
+
+/* --- Footer Link --- */
+.admin-link a, .back-to-home a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+.admin-link a:hover, .back-to-home a:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}
