@@ -10,21 +10,24 @@
     
     <div class="landing-container" id="landing-screen">
         <header class="landing-header">
-            <button class="server-login-btn" onclick="goToAdminPanel()">
+            <p class="landing-greeting">Hi ARAF</p>
+            <h1 class="landing-main-title">What can I help with?</h1>
+            <p class="landing-subtitle">Made by @avoid_araf_</p>
+            
+            <button class="server-login-btn top-right-btn" onclick="goToAdminPanel()">
                 <span class="diamond">&diams;</span> ServerLogin
             </button>
+            
+            <div class="landing-action-buttons">
+                <button class="landing-prompt-button" onclick="showChatScreen()">
+                    <span class="prompt-icon">🤖</span> Ask A21-GPT
+                </button>
+                </div>
+            
         </header>
-
-        <div class="landing-content">
-            <h2 class="landing-title">What can I help with?</h2>
-            <p class="landing-subtitle">Made by @avoid_araf_</p>
-        </div>
-
+        
         <div class="landing-footer">
-            <button class="ask-gpt-btn" onclick="showChatScreen()">
-                Ask A21-GPT
-            </button>
-        </div>
+            </div>
     </div>
 
 
@@ -58,43 +61,45 @@
         function showChatScreen() {
             landingScreen.classList.add('hidden');
             chatScreen.classList.remove('hidden');
+            document.body.style.backgroundColor = 'var(--background-color)'; 
             questionInput.focus();
         }
 
         function showLandingScreen() {
             landingScreen.classList.remove('hidden');
             chatScreen.classList.add('hidden');
+            document.body.style.backgroundColor = 'var(--dark-bg)'; 
         }
         
         function goToAdminPanel() {
-            window.location.href = "/admin"; // Redirects to the existing admin panel
+            window.location.href = "/admin";
         }
+        
+        // --- Initialize correct body background on load ---
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Start with the dark background matching the landing screen
+            document.body.style.backgroundColor = 'var(--dark-bg)'; 
+        });
 
-        // --- CHAT LOGIC FUNCTIONS (Unchanged from your original file) ---
 
-        // Function to create and append a message bubble
+        // --- CHAT LOGIC FUNCTIONS (Unchanged) ---
         function appendMessage(text, isUser) {
             const messageDiv = document.createElement('div');
-            // Use innerHTML to allow for formatted responses (e.g., if the AI returns markdown)
             const formattedText = text.replace(/\n/g, '<br>'); 
             
             messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
             messageDiv.innerHTML = `<p>${formattedText}</p><span class="timestamp">${new Date().toLocaleTimeString()}</span>`;
             chatHistory.appendChild(messageDiv);
-            // Auto-scroll to the bottom of the chat
             chatHistory.scrollTop = chatHistory.scrollHeight;
         }
 
-        // Updated askAI function to handle chat history
         async function askAI() {
             const question = questionInput.value.trim();
             if (!question) return;
 
-            // 1. Display user's question
             appendMessage(question, true);
-            questionInput.value = ''; // Clear input
+            questionInput.value = ''; 
 
-            // 2. Display a "typing" message from the AI
             const loadingDiv = document.createElement('div');
             loadingDiv.id = 'loading-message';
             loadingDiv.className = 'message ai-message loading';
@@ -102,7 +107,6 @@
             chatHistory.appendChild(loadingDiv);
             chatHistory.scrollTop = chatHistory.scrollHeight;
             
-            // Disable input/button while waiting
             questionInput.disabled = true;
             sendButton.disabled = true;
 
@@ -115,11 +119,9 @@
 
                 const data = await response.json();
 
-                // 3. Remove loading message
                 const loading = document.getElementById('loading-message');
                 if (loading) chatHistory.removeChild(loading);
 
-                // 4. Display AI's response
                 if (response.ok) {
                     appendMessage(data.answer, false);
                 } else {
@@ -131,14 +133,12 @@
                 if (loading) chatHistory.removeChild(loading);
                 appendMessage(`Network Error: Could not contact the server. ${error}`, false);
             } finally {
-                // Re-enable input/button
                 questionInput.disabled = false;
                 sendButton.disabled = false;
                 questionInput.focus();
             }
         }
         
-        // Allow sending with Enter key
         questionInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault(); 
@@ -146,7 +146,6 @@
             }
         });
 
-        // Initialize textarea to auto-resize for multi-line inputs
         questionInput.addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = this.scrollHeight + 'px';
