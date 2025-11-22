@@ -2,15 +2,18 @@
 import os
 from flask import Flask, request, jsonify, render_template
 from dotenv import load_dotenv
-from google import genai
+from google import genai as gemini # <-- পরিবর্তন ১: জেমিনি SDK-কে 'gemini' নামে ইমপোর্ট করা হলো
 import base64
 
 load_dotenv()
 
-app = Flask(__name__, template_folder='.') # Set template folder to current directory for simplicity
+app = Flask(__name__, template_folder='.') 
 # Configuration
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+
+# <-- পরিবর্তন ২: Client ইনিশিয়ালাইজেশন
+# এখন genai.configure() এর বদলে API Key ব্যবহার করে সরাসরি ক্লায়েন্ট অবজেক্ট তৈরি করা হলো
+client = gemini.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 # Simple in-memory knowledge base (Simulating RAG storage for demonstration)
 knowledge_base = [] 
@@ -44,7 +47,7 @@ def learn_content():
     if uploaded_file:
         try:
             # Create a Part from the uploaded image file
-            image_part = genai.types.Part.from_bytes(
+            image_part = gemini.types.Part.from_bytes( # <-- পরিবর্তন ৩: gemini.types.Part ব্যবহার
                 data=uploaded_file.read(),
                 mime_type=uploaded_file.content_type
             )
@@ -58,7 +61,7 @@ def learn_content():
             )
             
             # Send the image and prompt to the model
-            response = genai.generate_content([prompt, image_part])
+            response = client.models.generate_content([prompt, image_part]) # <-- পরিবর্তন ৪: client.models.generate_content ব্যবহার
             
             # Append the summary/learning to our simple knowledge base
             knowledge_base.append(f"Learned from image summary: {response.text}")
@@ -97,7 +100,7 @@ def ask_ai():
 
     try:
         # Generate content using the context and the user's question
-        response = genai.generate_content(full_prompt)
+        response = client.models.generate_content(full_prompt) # <-- পরিবর্তন ৪: client.models.generate_content ব্যবহার
         return jsonify({"answer": response.text})
     except Exception as e:
         return jsonify({"error": f"AI error: {str(e)}"}), 500
