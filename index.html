@@ -3,61 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI HSC Math & Physics Tutor</title>
+    <title>AI HSC Math & Physics Tutor - Chat</title>
     <link rel="stylesheet" href="style.css"> 
 </head>
 <body>
-    <div class="container">
-        <h1>🎓 Ai HSC Helper <small style="font-size: 0.5em; color: #6c757d;">by @avoid_araf_</small></h1>
-        <p style="text-align: center; margin-bottom: 25px;">Enter your mathematical or physics question here (Solution will be provided in Bengali):</p>
-        
-        <textarea id="question-input" rows="5" placeholder="e.g., A stone is thrown vertically upwards with a velocity of 20 m/s. Calculate the maximum height it reaches."></textarea>
-        <button onclick="askAI()">Get Solution</button>
-        
-        <hr style="margin: 30px 0; border-top: 1px solid #eee;">
+    <div class="chat-container">
+        <header class="chat-header">
+            <h1>🎓 Ai HSC Helper by @avoid_araf_</h1>
+            <a href="/admin" class="admin-link-chat">Admin Panel</a>
+        </header>
 
-        <h2>Solution:</h2>
-        <div id="response-box">...The world-class solution will appear here...</div>
+        <div id="chat-history" class="chat-history">
+            <div class="message ai-message">
+                <p>Hello! I am your AI HSC Math & Physics Tutor. Ask me any question, and I will provide a detailed solution in Bengali. How can I help you today?</p>
+                <span class="timestamp">Just now</span>
+            </div>
+            </div>
 
-        <div class="admin-link" style="text-align: right; margin-top: 25px;">
-            <a href="/admin">Admin Learning Panel</a>
+        <div class="chat-input-area">
+            <textarea id="question-input" rows="1" placeholder="Type your question here... (e.g., Calculate the velocity of a projectile at maximum height)"></textarea>
+            <button onclick="askAI()">Send</button>
         </div>
     </div>
 
     <script>
-        // JS remains the same, but the UI updates its appearance based on the new CSS
-        async function askAI() {
-            const question = document.getElementById('question-input').value;
-            const responseBox = document.getElementById('response-box');
-            
-            if (!question.trim()) {
-                responseBox.innerText = "Please enter your question.";
-                return;
-            }
+        const chatHistory = document.getElementById('chat-history');
+        const questionInput = document.getElementById('question-input');
+        const sendButton = document.querySelector('.chat-input-area button');
 
-            responseBox.innerHTML = "<h4>Processing solution... <small style='color: #0077B6;'>Please wait</small></h4>";
+        // Function to create and append a message bubble
+        function appendMessage(text, isUser) {
+            const messageDiv = document.createElement('div');
+            // Use innerHTML to allow for formatted responses (e.g., if the AI returns markdown)
+            const formattedText = text.replace(/\n/g, '<br>'); 
+            
+            messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
+            messageDiv.innerHTML = `<p>${formattedText}</p><span class="timestamp">${new Date().toLocaleTimeString()}</span>`;
+            chatHistory.appendChild(messageDiv);
+            // Auto-scroll to the bottom of the chat
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        // Updated askAI function to handle chat history
+        async function askAI() {
+            const question = questionInput.value.trim();
+            if (!question) return;
+
+            // 1. Display user's question
+            appendMessage(question, true);
+            questionInput.value = ''; // Clear input
+
+            // 2. Display a "typing" message from the AI
+            const loadingDiv = document.createElement('div');
+            loadingDiv.id = 'loading-message';
+            loadingDiv.className = 'message ai-message loading';
+            loadingDiv.innerHTML = '<p>Processing solution... <span class="loading-dots"></span></p>';
+            chatHistory.appendChild(loadingDiv);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+            
+            // Disable input/button while waiting
+            questionInput.disabled = true;
+            sendButton.disabled = true;
 
             try {
                 const response = await fetch('/ask', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ question: question })
                 });
 
                 const data = await response.json();
 
+                // 3. Remove loading message
+                const loading = document.getElementById('loading-message');
+                if (loading) chatHistory.removeChild(loading);
+
+                // 4. Display AI's response
                 if (response.ok) {
-                    responseBox.innerText = data.answer;
+                    appendMessage(data.answer, false);
                 } else {
-                    responseBox.innerText = `Error: ${data.error || "Unknown problem"}. Please check API Key configuration on Render.`;
+                    appendMessage(`Error: ${data.error || "Unknown problem"}. Please check API Key configuration.`, false);
                 }
 
             } catch (error) {
-                responseBox.innerText = `Network Error: Could not contact the server. ${error}`;
+                const loading = document.getElementById('loading-message');
+                if (loading) chatHistory.removeChild(loading);
+                appendMessage(`Network Error: Could not contact the server. ${error}`, false);
+            } finally {
+                // Re-enable input/button
+                questionInput.disabled = false;
+                sendButton.disabled = false;
+                questionInput.focus();
             }
         }
+        
+        // Allow sending with Enter key
+        questionInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault(); 
+                askAI();
+            }
+        });
+
+        // Initialize textarea to auto-resize for multi-line inputs
+        questionInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+
     </script>
 </body>
 </html>

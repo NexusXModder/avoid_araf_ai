@@ -1,15 +1,16 @@
-/* style.css - World-Class, Paid, Professional Design for AI Tutor */
+/* style.css - World-Class, Professional Design */
 
 :root {
-    --primary-color: #0077B6; /* Deep Blue */
-    --secondary-color: #00B4D8; /* Light Blue/Cyan */
+    --primary-color: #0077B6; /* Deep Blue (for branding) */
+    --secondary-color: #00B4D8; /* Light Blue/Cyan (for accents) */
     --background-color: #F8F9FA; /* Lightest Gray */
-    --card-background: #FFFFFF;
-    --text-color: #343A40;
-    --success-color: #28A745;
-    --error-color: #DC3545;
+    --card-background: #FFFFFF; /* White for content areas */
+    --text-color: #343A40; /* Dark Gray for main text */
+    --success-color: #28A745; /* Green for success messages */
+    --error-color: #DC3545; /* Red for errors/notes */
 }
 
+/* --- Base Styles --- */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -24,8 +25,19 @@ body {
     padding: 20px;
 }
 
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: var(--secondary-color);
+}
+
+/* --- Container (Used for Admin Page) --- */
 .container {
-    max-width: 900px;
+    max-width: 600px;
     margin: 40px auto;
     background-color: var(--card-background);
     padding: 45px;
@@ -39,50 +51,47 @@ h1 {
     color: var(--primary-color);
     text-align: center;
     margin-bottom: 20px;
-    font-size: 2.5em;
+    font-size: 2em;
     font-weight: 600;
 }
 
 h2 {
-    color: var(--primary-color);
-    margin-top: 30px;
-    margin-bottom: 15px;
-    font-size: 1.8em;
-    border-left: 5px solid var(--secondary-color);
-    padding-left: 10px;
+    color: var(--text-color);
+    margin-top: 25px;
+    font-size: 1.5em;
+    font-weight: 500;
 }
 
-/* --- Inputs & Buttons --- */
-textarea, input[type="password"], input[type="file"], input[type="text"] {
+/* --- Inputs and Buttons --- */
+input[type="text"],
+input[type="password"],
+textarea {
     width: 100%;
     padding: 15px;
-    margin-bottom: 20px;
-    border: 1px solid #CED4DA;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 1em;
-    transition: all 0.3s;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-textarea:focus, input:focus {
-    border-color: var(--secondary-color);
-    box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.2);
+input:focus,
+textarea:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 8px rgba(0, 119, 182, 0.2);
     outline: none;
 }
-textarea { resize: vertical; min-height: 120px; }
 
 button {
+    padding: 12px 25px;
     background-color: var(--primary-color);
     color: white;
-    padding: 14px 25px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 1.1em;
+    font-size: 1em;
     font-weight: 600;
     transition: background-color 0.3s, box-shadow 0.3s;
-    width: 100%;
-    margin-top: 5px;
 }
 
 button:hover {
@@ -90,32 +99,11 @@ button:hover {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* --- Response Area --- */
-#response-box {
-    margin-top: 25px;
-    padding: 25px;
-    background-color: #EBF8FF; /* Lighter shade of blue */
-    border-radius: 10px;
-    border: 1px solid var(--secondary-color);
-    min-height: 150px;
-    font-size: 1em;
-    white-space: pre-wrap;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
 /* --- Admin Panel Specific Styles --- */
+.login-section input,
 .login-section button {
-    background-color: var(--secondary-color);
-}
-.login-section button:hover {
-    background-color: #0077B6;
-}
-
-#learning-section button {
-    background-color: var(--success-color);
-}
-#learning-section button:hover {
-    background-color: #1E7E34;
+    margin-top: 5px;
+    margin-bottom: 10px;
 }
 
 #message-box {
@@ -123,30 +111,171 @@ button:hover {
     padding: 15px;
     border-radius: 8px;
     font-weight: 600;
+    text-align: center;
+    border: 1px solid transparent;
 }
 
-.success {
+#message-box.success {
     background-color: #D4EDDA;
-    border: 1px solid var(--success-color);
-    color: #155724;
+    color: var(--success-color);
+    border-color: #C3E6CB;
 }
 
-.error {
+#message-box.error {
     background-color: #F8D7DA;
-    border: 1px solid var(--error-color);
-    color: #721C24;
+    color: var(--error-color);
+    border-color: #F5C6CB;
 }
 
-.hidden { display: none !important; }
+.hidden {
+    display: none !important;
+}
 
-/* --- Footer Link --- */
-.admin-link a, .back-to-home a {
+/* --- CHAT-SPECIFIC STYLES (for index.html) --- */
+
+.chat-container {
+    max-width: 800px;
+    margin: 40px auto;
+    background-color: var(--card-background);
+    border-radius: 16px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    height: 80vh; /* Set a fixed height for the chat window */
+    min-height: 550px;
+    overflow: hidden;
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    border-bottom: 1px solid #eee;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 16px 16px 0 0;
+}
+
+.chat-header h1 {
+    color: white;
+    margin: 0;
+    text-align: left;
+}
+
+.admin-link-chat {
+    color: white !important;
+    text-decoration: underline !important;
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+.admin-link-chat:hover {
+    opacity: 1;
+}
+
+/* Chat History Area */
+.chat-history {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 30px;
+    background-color: #EBF8FF; /* Lighter shade of blue for contrast */
+}
+
+.message {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    max-width: 85%;
+}
+
+.message p {
+    padding: 12px 18px;
+    border-radius: 20px;
+    margin: 0;
+    line-height: 1.5;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+.timestamp {
+    font-size: 0.75em;
+    color: #6c757d; /* Gray color for timestamp */
+    margin-top: 5px;
+}
+
+/* User's Message (Right-aligned, Primary Color) */
+.user-message {
+    align-self: flex-end;
+    align-items: flex-end;
+}
+.user-message p {
+    background-color: var(--primary-color);
+    color: white;
+    border-bottom-right-radius: 5px; 
+}
+
+/* AI's Message (Left-aligned, Light Background) */
+.ai-message {
+    align-self: flex-start;
+    align-items: flex-start;
+}
+.ai-message p {
+    background-color: var(--card-background);
+    color: var(--text-color);
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    border-bottom-left-radius: 5px; 
+}
+
+/* Chat Input Area */
+.chat-input-area {
+    padding: 20px 30px;
+    border-top: 1px solid #ddd;
+    display: flex;
+    gap: 10px;
+    background-color: var(--card-background);
+    flex-shrink: 0;
+}
+
+.chat-input-area textarea {
+    flex-grow: 1;
+    min-height: 44px;
+    max-height: 150px;
+    resize: none;
+    padding: 12px 15px;
+    border-radius: 22px; /* More rounded for modern look */
+    font-size: 1em;
+    transition: all 0.2s;
+    margin-bottom: 0; /* Remove margin from global input style */
+}
+
+.chat-input-area button {
+    width: 80px;
+    height: 44px;
+    padding: 0; 
+    border-radius: 22px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+/* Loading Animation */
+@keyframes dot-flash {
+    0%, 80%, 100% { opacity: 0; }
+    40% { opacity: 1; }
+}
+
+.loading-dots::before {
+    content: '• • •';
+    display: inline-block;
+    width: 1.5em; /* Ensures space for dots */
+    overflow: hidden;
+    position: relative;
+    top: 0.1em;
+}
+.loading-dots {
     color: var(--primary-color);
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.3s;
+    font-size: 1.2em;
+    animation: dot-flash 1s infinite step-start;
 }
-.admin-link a:hover, .back-to-home a:hover {
-    color: var(--secondary-color);
-    text-decoration: underline;
-}
+
