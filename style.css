@@ -1,0 +1,32 @@
+/* style.css - Clean and Professional Design for AI Tutor */
+
+/* --- Universal Reset and Base --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f2f5; /* Light grey background */
+    color: #333;
+    line-height: 1.6;
+    padding: 40px 20px;
+}
+
+/* --- Container Layout --- */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Headings and Titles --- */
+h1 {
+    color: #007bff; /* Primary Blue */
+    text-align: center;
+    margin-

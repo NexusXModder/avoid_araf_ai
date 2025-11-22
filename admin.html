@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tutor Admin Learning Panel</title>
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+    <div class="container">
+        <h1>🔑 Admin Learning Panel</h1>
+        
+        <div id="login-section" class="login-section">
+            <p>Enter your Admin Password:</p>
+            <input type="password" id="admin-password" placeholder="Password">
+            <button onclick="adminLogin()">Login</button>
+        </div>
+
+        <div id="learning-section" class="hidden">
+            <p><strong>1. Teach with Text:</strong> (e.g., A crucial formula or definition)</p>
+            <textarea id="text-input" rows="3" placeholder="Enter new Math/Physics content or note"></textarea>
+            <button onclick="learnContent('text')">Teach with Text</button>
+
+            <hr>
+
+            <p><strong>2. Teach with Image/Screenshot:</strong> (Picture of a book page or problem)</p>
+            <input type="file" id="file-input" accept="image/*">
+            <button onclick="learnContent('image')">Teach with Image</button>
+            
+            <p style="margin-top: 20px;"><a href="/">Go back to Homepage</a></p>
+        </div>
+
+        <div id="message-box"></div>
+    </div>
+
+    <script>
+        // NOTE: The real security check is done on the server side (server.py).
+        const ADMIN_PASS = "arafmahbub@16"; 
+        let isLoggedIn = false;
+
+        function showMessage(msg, isError = false) {
+            const box = document.getElementById('message-box');
+            box.innerText = msg;
+            box.className = isError ? 'error' : 'success';
+        }
+
+        function adminLogin() {
+            const password = document.getElementById('admin-password').value;
+            if (password === ADMIN_PASS) {
+                isLoggedIn = true;
+                document.getElementById('login-section').classList.add('hidden');
+                document.getElementById('learning-section').classList.remove('hidden');
+                showMessage("Login Successful! You can now teach the AI new content.");
+            } else {
+                showMessage("Incorrect password.", true);
+            }
+        }
+        
+        async function learnContent(type) {
+            if (!isLoggedIn) {
+                showMessage("Please log in first.", true);
+                return;
+            }
+
+            const messageBox = document.getElementById('message-box');
+            messageBox.innerText = "Teaching AI... (Please wait, especially for images)";
+            messageBox.className = 'success'; 
+            
+            const formData = new FormData();
+            formData.append('admin_pass', ADMIN_PASS); 
+
+            if (type === 'text') {
+                const textInput = document.getElementById('text-input').value;
+                if (!textInput.trim()) {
+                    showMessage("Text input cannot be empty.", true);
+                    return;
+                }
+                formData.append('text_input', textInput);
+            } else if (type === 'image') {
+                const fileInput = document.getElementById('file-input');
+                if (fileInput.files.length === 0) {
+                    showMessage("Please select a file to upload.", true);
+                    return;
+                }
+                formData.append('file', fileInput.files[0]);
+            }
+
+            try {
+                const response = await fetch('/learn', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage(`Success! Server Message: ${data.message}`);
+                    if (type === 'text') document.getElementById('text-input').value = ''; 
+                    if (type === 'image') document.getElementById('file-input').value = '';
+                } else {
+                    showMessage(`Error: ${data.error || "Unknown problem"}`, true);
+                }
+            } catch (error) {
+                showMessage(`Network Error: Could not contact the server. ${error}`, true);
+            }
+        }
+    </script>
+</body>
+</html>

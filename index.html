@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI HSC Math & Physics Tutor</title>
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 AI HSC Math & Physics Tutor by @avoid_araf_</h1>
+        <p>Enter your mathematical or physics question here (Solution will be provided in Bengali):</p>
+        
+        <textarea id="question-input" rows="5" placeholder="e.g., If a body's velocity changes from 5m/s to 10m/s in 2s, what is the acceleration?"></textarea>
+        <button onclick="askAI()">Get Solution</button>
+        
+        <hr>
+
+        <h2>Solution:</h2>
+        <div id="response-box">...The solution will appear here...</div>
+
+        <div class="admin-link">
+            <a href="/admin">Admin Learning Panel</a>
+        </div>
+    </div>
+
+    <script>
+        async function askAI() {
+            const question = document.getElementById('question-input').value;
+            const responseBox = document.getElementById('response-box');
+            
+            if (!question.trim()) {
+                responseBox.innerText = "Please enter your question.";
+                return;
+            }
+
+            responseBox.innerText = "Processing solution... (Please wait)";
+
+            try {
+                const response = await fetch('/ask', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ question: question })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    responseBox.innerText = data.answer;
+                } else {
+                    responseBox.innerText = `Error: ${data.error || "Unknown problem"}`;
+                }
+
+            } catch (error) {
+                responseBox.innerText = `Network Error: Could not contact the server. ${error}`;
+            }
+        }
+    </script>
+</body>
+</html>
